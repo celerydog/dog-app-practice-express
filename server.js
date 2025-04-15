@@ -5,7 +5,6 @@ const PORT = 6969
 require('dotenv').config()
 
 let db
-console.log("DB_String:", process.env.DB_String); // add this
 let dbConnectionStr = process.env.DB_String // to ask Jeff what doing
 let dbName = 'dogs'
 
