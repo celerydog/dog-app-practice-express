@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <h1>Current Dogs</h1>
+       
+
+           
+
+        <!-- old version -->
+
+        <ul class="Dogs">
+            <% for(let i=0; i < info.length; i++) {%>
+                <li class="dog">
+                    <span>
+                        <%= info[i].dogName %>
+                    </span>
+                    <span>
+                        <%= info[i].dogBreed %>
+                    </span>
+                    <span>
+                        <%= info[i].likes %>
+                    </span>
+                    <span class='fa fa-thumbs-up upvote-button'></span>
+                    <span class='fa fa-trash delete-button'></span>
+                    <img src=``>
+                    <span>
+                        <%= info[i]._id %>
+                    </span>
+                </li>
+                <% } %>
+        </ul>
+
+         <!-- form version -->
+
+         <ul class="Dogs">
+
+         <% for(let i=0; i < info.length; i++) {%>
+
+            <li class="dog">
+                <span>
+                    <%= info[i].dogName %>
+                </span>
+                <span>
+                    <%= info[i].dogBreed %>
+                </span>
+                <span>
+                    <%= info[i].likes %>
+                </span>
+
+                <form action="/addOneLikeForm" method="POST">
+                    <input type="hidden" name="dogNameS" value="<%= info[i].dogName %>">
+                    <input type="hidden" name="dogBreedS" value="<%= info[i].dogBreed %>">
+                    <input type="hidden" name="likeS" value="<%= info[i].likes %>">
+                    <button type="submit"><span class='fa fa-thumbs-up'></span></button>
+                </form>
+
+                <form action="deleteDogImproved" method="POST">
+                    <input type="hidden" name="dogNameS" value="<%= info[i].dogName %>">
+                    <input type="hidden" name="dogBreedS" value="<%= info[i].dogBreed %>">
+                    <input type="hidden" name="likeS" value="<%= info[i].likes %>">
+                    <button type="submit"><span class='fa fa-trash'></span></button>
+                </form>
+
+
+                <img src=``>
+                <span>
+                    <%= info[i]._id %>
+                </span>
+            </li>
+            <% } %>
+
+    </ul>
+
+        <!-- javascript functions i dunno whatever -->
+
+        <ul class="Dogs">
+            <% for(let i=0; i < info.length; i++) {%>
+                <li class="dog">
+                    <span>
+                        <%= info[i].dogName %>
+                    </span>
+                    <span>
+                        <%= info[i].dogBreed %>
+                    </span>
+                    <span>
+                        <%= info[i].likes %>
+                    </span>
+                    <button
+                        onclick="addLikeImproved('<%= info[i].dogName %>', '<%= info[i].dogBreed %>', '<%= info[i].likes %>')"><span
+                            class='fa fa-thumbs-up'></span></button>
+
+                    <button onclick="deleteDogImproved('<%= info[i].dogName %>', '<%= info[i].dogBreed %>')"><span class='fa fa-trash'></span></button>
+                    <img src=``>
+                    <span>
+                        <%= info[i]._id %>
+                    </span>
+                </li>
+                <% } %>
+        </ul>
+
+
+
+        <h2>Add A Dog:</h2>
+
+        <form action="/addDog" method="POST">
+            <input type="text" placeholder="Dog Name" name="dogName">
+            <input type="text" placeholder="Dog Breed" name="dogBreed">
+            <input type="submit">
+        </form>
+
+
+        <script src='js/main.js'></script>
+    </body>
+
+    </html>
