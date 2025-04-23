@@ -29,8 +29,15 @@ app.get('/', async (req, res) => {
         const response = await fetch('https://dog.ceo/api/breeds/list/all');
         const data = await response.json()
         const breeds = Object.keys(data.message) //extract breed names
+        console.log(breeds)
 
         const dbData = await db.collection('dogs').find().sort({ likes: -1 }).toArray()
+
+        // first lizzy quest: iterate through data (use for loop), make req to dog api for all pictures
+        //send off to template to render!!
+
+
+        //2nd lizzy quest: store URL when creating the record
 
         res.render('index.ejs', { info: dbData, breeds: breeds})
     } catch (error) {
@@ -40,6 +47,10 @@ app.get('/', async (req, res) => {
 
 app.post('/addDog', (req, res) => {
     db.collection('dogs').insertOne({
+
+        //add validation point!
+        //validation point for name = not empty, more than 2 character
+        //validation for breed - check against API
         dogName: req.body.dogName,
         dogBreed: req.body.dogBreed,
         likes: 0

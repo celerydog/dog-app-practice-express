@@ -25,73 +25,6 @@
         <h1>Current Dogs</h1>
        
 
-           
-
-        <!-- old version -->
-
-        <ul class="Dogs">
-            <% for(let i=0; i < info.length; i++) {%>
-                <li class="dog">
-                    <span>
-                        <%= info[i].dogName %>
-                    </span>
-                    <span>
-                        <%= info[i].dogBreed %>
-                    </span>
-                    <span>
-                        <%= info[i].likes %>
-                    </span>
-                    <span class='fa fa-thumbs-up upvote-button'></span>
-                    <span class='fa fa-trash delete-button'></span>
-                    <img src=``>
-                    <span>
-                        <%= info[i]._id %>
-                    </span>
-                </li>
-                <% } %>
-        </ul>
-
-         <!-- form version -->
-
-         <ul class="Dogs">
-
-         <% for(let i=0; i < info.length; i++) {%>
-
-            <li class="dog">
-                <span>
-                    <%= info[i].dogName %>
-                </span>
-                <span>
-                    <%= info[i].dogBreed %>
-                </span>
-                <span>
-                    <%= info[i].likes %>
-                </span>
-
-                <form action="/addOneLikeForm" method="POST">
-                    <input type="hidden" name="dogNameS" value="<%= info[i].dogName %>">
-                    <input type="hidden" name="dogBreedS" value="<%= info[i].dogBreed %>">
-                    <input type="hidden" name="likeS" value="<%= info[i].likes %>">
-                    <button type="submit"><span class='fa fa-thumbs-up'></span></button>
-                </form>
-
-                <form action="deleteDogImproved" method="POST">
-                    <input type="hidden" name="dogNameS" value="<%= info[i].dogName %>">
-                    <input type="hidden" name="dogBreedS" value="<%= info[i].dogBreed %>">
-                    <input type="hidden" name="likeS" value="<%= info[i].likes %>">
-                    <button type="submit"><span class='fa fa-trash'></span></button>
-                </form>
-
-
-                <img src=``>
-                <span>
-                    <%= info[i]._id %>
-                </span>
-            </li>
-            <% } %>
-
-    </ul>
-
         <!-- javascript functions i dunno whatever -->
 
         <ul class="Dogs">
@@ -125,7 +58,15 @@
 
         <form action="/addDog" method="POST">
             <input type="text" placeholder="Dog Name" name="dogName">
-            <input type="text" placeholder="Dog Breed" name="dogBreed">
+            <select name="dogBreed" id="dogBreedOptions">
+                <% breeds.forEach(breed => { %>
+                    <option value="<%= breed %>"><%= breed %></option>
+                    <% }); %>
+            </select>
+            
+
+            <!-- changed to ejs to grab the breed names, for loop for each option -->
+                <!-- select input same name-->
             <input type="submit">
         </form>
 
