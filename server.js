@@ -1,8 +1,12 @@
+
 const express = require('express') // node.js function find module named express, creates a new instance of the express framework
 const app = express() // variable that calls express
 const MongoClient = require('mongodb').MongoClient // node.js function to find mongodb, create an instance of the Mongoclient to connect to a cluster
 const PORT = 6969
 require('dotenv').config()
+const dogs = require('./data/dogs.js');
+
+
 
 let db
 let dbConnectionStr = process.env.DB_String // to ask Jeff what doing
@@ -24,14 +28,17 @@ app.use(express.json()) // allows express to recognise incoming request object a
 app.get('/', async (req, res) => {
     console.log('got a request for /')
 
+
     try {
         // Fetch dog breeds from Dog CEO API
         const response = await fetch('https://dog.ceo/api/breeds/list/all');
         const data = await response.json()
-        const breeds = Object.keys(data.message) //extract breed names
-        console.log(breeds)
+        const breedValue = Object.keys(data.message) //extract breed names
+
+
 
         const dbData = await db.collection('dogs').find().sort({ likes: -1 }).toArray()
+
 
         // first lizzy quest: iterate through data (use for loop), make req to dog api for all pictures
         //send off to template to render!!
@@ -39,35 +46,53 @@ app.get('/', async (req, res) => {
 
         //2nd lizzy quest: store URL when creating the record
 
-        res.render('index.ejs', { info: dbData, breeds: breeds})
+
+
+        res.render('index.ejs', { info: dbData })
     } catch (error) {
         console.log(error)
     }
 })
 
-app.post('/addDog', (req, res) => {
-    db.collection('dogs').insertOne({
+app.post('/addDog', async (req, res) => {
+    const dogName = req.body.dogName
+    const dogBreedValue = req.body.dogBreed
 
-        //add validation point!
-        //validation point for name = not empty, more than 2 character
-        //validation for breed - check against API
-        dogName: req.body.dogName,
-        dogBreed: req.body.dogBreed,
-        likes: 0
-    })
-        .then(result => {
-            console.log('Dog added')
-            res.redirect('/')
-        })
-        .catch(error => console.error(error))
-})
+    const dogBreed = dogs.find(dog => dog.value === dogBreedValue).label
+    const dogBreedURL = dogs.find(dog => dog.value === dogBreedValue).urlLabel
+
+    const response = await fetch(`https://dog.ceo/api/breed/${dogBreedURL}/images/random`)
+    const data = await response.json()
+    const dogImage = data.message
+
+    try {
+        await db.collection('dogs').insertOne({
+            //add validation point!
+            //validation point for name = not empty, more than 2 character
+            //validation for breed - check against API
+            dogName: dogName,
+            dogBreed: dogBreed,
+            dogImage: dogImage,
+
+            likes: 0
+        });
+
+        console.log('Dog added')
+        res.redirect('/')
+
+    } catch (error) {
+        console.log(error)
+    }
+});
+
+
 
 app.put('/addOneLike', (req, res) => {
     const query = {
         dogName: req.body.dogNameS,
         dogBreed: req.body.dogBreedS
-      } 
-      console.log('MongoDB Query:', query) // debugging what was actually being sent to Mongo, for some reason the query strings had white space
+    }
+    console.log('MongoDB Query:', query) // debugging what was actually being sent to Mongo, for some reason the query strings had white space
 
     db.collection('dogs').updateOne({
         dogName: req.body.dogNameS,
@@ -109,25 +134,25 @@ app.post('/addOneLikeForm', (req, res) => {
 })
 
 app.delete('/deleteDog', (req, res) => {
-    db.collection('dogs').deleteOne({dogName: req.body.dogNameS})
-    .then(result => {
-        console.log('Dog Deleted')
-        res.redirect('/')
-    })
-    .catch(error => console.error(error))
+    db.collection('dogs').deleteOne({ dogName: req.body.dogNameS })
+        .then(result => {
+            console.log('Dog Deleted')
+            res.redirect('/')
+        })
+        .catch(error => console.error(error))
 
 })
 
 
 
 app.post('/deleteDogImproved', (req, res) => {
-    db.collection('dogs').deleteOne({dogName: req.body.dogNameS})
-    .then(result => {
-        console.log(result)
-        console.log('Dog Deleted')
-        res.redirect('/')
-    })
-    .catch(error => console.error(error))
+    db.collection('dogs').deleteOne({ dogName: req.body.dogNameS })
+        .then(result => {
+            console.log(result)
+            console.log('Dog Deleted')
+            res.redirect('/')
+        })
+        .catch(error => console.error(error))
 
 })
 
